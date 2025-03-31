@@ -1,5 +1,5 @@
 def comparar_datos(intervalos, transacciones):
-    intervalos_ord = sorted(intervalos, key=lambda x: x[0]-x[1])
+    intervalos_ord = sorted(intervalos, key=lambda x: (x[0]-x[1], x[0]+x[1]))
     coincidencias = []
 
     for i in range(len(intervalos_ord)):

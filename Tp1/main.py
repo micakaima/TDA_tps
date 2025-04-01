@@ -1,15 +1,25 @@
 def comparar_datos(intervalos, transacciones):
-    intervalos_ord = sorted(intervalos, key=lambda x: (x[0]-x[1], x[0]+x[1]))
+    intervalos_ord = sorted(intervalos, key=lambda x: (x[0]-x[1], x[0]))
     coincidencias = []
 
-    for i in range(len(intervalos_ord)):
-        t_i,e_i = intervalos_ord[i][0], intervalos_ord[i][1]
+    for i in range(len(transacciones)):
+        t_i,e_i = intervalos_ord[0][0], intervalos_ord[0][1]
         s_i = transacciones[i]
+        menor_distancia = s_i - (t_i - e_i)
+        j = 1
+        while j < len(intervalos_ord) and s_i - (intervalos_ord[j][0] - intervalos_ord[j][1]) >= 0:
+            d = s_i - (intervalos_ord[j][0] - intervalos_ord[j][1])
+            if d < menor_distancia:
+                menor_distancia = d
+                t_i,e_i = intervalos_ord[j][0], intervalos_ord[j][1]
+            j += 1
+        
 
         if s_i < (t_i-e_i) or s_i > (t_i+e_i):
             return False, []
         
         coincidencias.append((s_i, t_i, e_i))
+        intervalos_ord.remove((t_i,e_i))
     
     return True, coincidencias
 

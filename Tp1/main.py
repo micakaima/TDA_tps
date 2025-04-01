@@ -19,7 +19,7 @@ def comparar_datos(intervalos, transacciones):
 
         for j in range(len(intervalos)):
             t_i, e_i = intervalos[j][0], intervalos[j][1]
-            if intervalos_todos[((t_i,e_i))] <= 0:
+            if intervalos_todos[(t_i,e_i)] <= 0:
                 continue
             if (t_i-e_i) <= s_i <= (t_i+e_i) and (t_i + e_i) < min_fin:
                 min_fin = t_i + e_i
@@ -35,20 +35,33 @@ def comparar_datos(intervalos, transacciones):
 
 
 def main():
-    n = int(input())
+    try:
+        n = int(input())
+    except:
+        print("'n' debe ser un entero positivo")
+        return
+    
     intervalos = []
     transacciones = []
 
     for _ in range(n):
         linea = input()
         linea = linea.strip().split(",")
-        t_i, e_i = int(linea[0]), int(linea[1])
+        try:
+            t_i, e_i = int(linea[0]), int(linea[1])
+        except:
+            print("Los tiempos 't', y los errores 'e' deben ser enteros positivos")
+            return
         intervalos.append((t_i, e_i))
-    
+
     for _ in range(n):
         linea = input()
         linea = linea.strip()
-        s_i = int(linea)
+        try:
+            s_i = int(linea)
+        except:
+            print("Las transacciones 's' deben ser enteros positivos")
+            return
         transacciones.append(s_i)
     
     es_rata, coincidencias = comparar_datos(intervalos, transacciones)

@@ -1,25 +1,31 @@
 def comparar_datos(intervalos, transacciones):
-    intervalos_ord = sorted(intervalos, key=lambda x: (x[0]-x[1], x[0]))
     coincidencias = []
+    intervalos_todos = {}
 
     for i in range(len(transacciones)):
-        t_i,e_i = intervalos_ord[0][0], intervalos_ord[0][1]
         s_i = transacciones[i]
-        menor_distancia = s_i - (t_i - e_i)
-        j = 1
-        while j < len(intervalos_ord) and s_i - (intervalos_ord[j][0] - intervalos_ord[j][1]) >= 0:
-            d = s_i - (intervalos_ord[j][0] - intervalos_ord[j][1])
-            if d < menor_distancia:
-                menor_distancia = d
-                t_i,e_i = intervalos_ord[j][0], intervalos_ord[j][1]
-            j += 1
-        
+        intervalo_i = ()
+        min_fin = float('inf')
 
-        if s_i < (t_i-e_i) or s_i > (t_i+e_i):
+        for j in range(len(intervalos)):
+            t_i, e_i = intervalos[j][0], intervalos[j][1]
+            if (t_i,e_i) not in intervalos_todos:
+                intervalos_todos[(t_i,e_i)] = 0
+            intervalos_todos[(t_i,e_i)] += 1
+
+        for j in range(len(intervalos)):
+            t_i, e_i = intervalos[j][0], intervalos[j][1]
+            if intervalos_todos[((t_i,e_i))] <= 0:
+                continue
+            if (t_i-e_i) <= s_i <= (t_i+e_i) and (t_i + e_i) < min_fin:
+                min_fin = t_i + e_i
+                intervalo_i = (t_i, e_i)
+
+        if not intervalo_i:
             return False, []
         
-        coincidencias.append((s_i, t_i, e_i))
-        intervalos_ord.remove((t_i,e_i))
+        intervalos_todos[intervalo_i] -= 1
+        coincidencias.append((s_i, intervalo_i[0], intervalo_i[1]))
     
     return True, coincidencias
 
